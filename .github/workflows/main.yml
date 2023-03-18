@@ -21,7 +21,7 @@ jobs:
       - name: Build & Push Docker Image
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-            image: annahbellah/fashion-blog-image:v1
+            image: annahbellah/fashion-blog-image
             tags: latest
             registry: docker.io
             dockerfile: Dockerfile
