@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 //        User user=userRepository.findByEmail(email).orElseThrow(() -> new CustomRequestException("invalid username or password"));
 //        UserPojo userPojo=new UserPojo();
 //        BeanUtils.copyProperties(user,userPojo);
-//        return new ResponseEntity<>(userPojo,HttpStatus.OK);
+//        return new ResponseEntity<>(userPojo,HttpStatus.OK);..
     }
 
 
