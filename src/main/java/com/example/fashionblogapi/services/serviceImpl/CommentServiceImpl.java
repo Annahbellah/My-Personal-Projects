@@ -1,5 +1,6 @@
 package com.example.fashionblogapi.services.serviceImpl;
 
+import com.example.fashionblogapi.pojos.CommentCreationPojo;
 import com.example.fashionblogapi.pojos.CommentPojo;
 import com.example.fashionblogapi.pojos.PostPojo;
 import com.example.fashionblogapi.entities.Comment;
@@ -32,36 +33,42 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public ResponseEntity<CommentPojo> createNewComment(long userId, long postId, CommentPojo commentPojo) {
+    public CommentPojo createNewComment(CommentCreationPojo commentPojo) {
+        System.out.println("creation method called");
         Comment comment = new Comment();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomRequestException("User not found"));
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findById(commentPojo.getPostId())
                 .orElseThrow(() -> new CustomRequestException("Post not found"));
+
+        User author=userRepository.findById(commentPojo.getCommentAuthorId())
+                .orElseThrow(() -> new CustomRequestException("Author not found"));
+
         comment.setCommentBody(commentPojo.getCommentBody());
-        comment.setDateCommented(Date.valueOf(LocalDate.now()));
-        comment.setTimeCommented(Time.valueOf(LocalTime.now()));
         comment.setPost(post);
-        comment.setCommentAuthor(user);
+        comment.setCommentAuthor(author);
+
+        System.out.println(author);
+        System.out.println(post);
+
         Comment saveComment = commentRepository.save(comment);
         CommentPojo commentPojo1 = new CommentPojo();
+        System.out.println(saveComment);
         BeanUtils.copyProperties(saveComment, commentPojo1);
 
-        return new ResponseEntity<>(commentPojo1, HttpStatus.CREATED);
+        return commentPojo1;
 
     }
 
     @Override
-    public ResponseEntity<Comment> editComment(Long userId, PostPojo postPojo, Long CommentId) {
-        Comment comment = commentRepository.findById(CommentId)
+    public CommentPojo editComment(CommentPojo commentPojo) {
+        Comment comment = commentRepository.findById(commentPojo.getCommentId())
                 .orElseThrow(() -> new CustomRequestException("Comment not found"));
-        if (comment.getCommentAuthor().getUserId() == userId) {
-            comment.setCommentBody(postPojo.getBody());
+        if (comment.getCommentAuthor().getUserId() == commentPojo.getUserId()) {
+            comment.setCommentBody(commentPojo.getCommentBody());
             commentRepository.save(comment);
         } else {
             throw new CustomRequestException("comment edit failed!");
         }
-        return null;
+        return commentPojo;
     }
 
     @Override
@@ -94,9 +101,5 @@ public class CommentServiceImpl implements CommentService {
          return new ResponseEntity<>("post deleted", HttpStatus.OK);
     }
 
-    @Override
-    public String createComment(CommentPojo commentPojo) {
-        return null;
-    }
 
 }

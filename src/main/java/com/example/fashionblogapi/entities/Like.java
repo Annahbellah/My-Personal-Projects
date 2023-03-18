@@ -17,7 +17,12 @@ import lombok.NoArgsConstructor;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
+
+    @Column(nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
     private Long postId;
 }

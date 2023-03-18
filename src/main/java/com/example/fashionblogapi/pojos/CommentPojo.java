@@ -9,7 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class CommentPojo {
+    private Long userId;
+    private Long commentId;
+    private Long postId;
     private String commentBody;
-
     private User commentAuthor;
 }
+

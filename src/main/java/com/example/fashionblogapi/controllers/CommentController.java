@@ -1,14 +1,15 @@
 package com.example.fashionblogapi.controllers;
 
+import com.example.fashionblogapi.pojos.CommentCreationPojo;
 import com.example.fashionblogapi.pojos.CommentPojo;
 import com.example.fashionblogapi.services.CommentService;
-import lombok.AllArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/Api/v1/comment")
+@RequestMapping("/api/v1/comment")
 public class CommentController {
     private final CommentService commentService;
 
@@ -17,13 +18,14 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("//Api/v1/comments")
-    public ResponseEntity<String> createComment(@RequestBody CommentPojo commentPojo) {
-        return ResponseEntity.ok(commentService.createComment(commentPojo));
+    @PostMapping("/create-comment")
+    public ResponseEntity<CommentPojo> createComment(@RequestBody CommentCreationPojo commentPojo) {
+        System.out.println("inside the controller");
+        return ResponseEntity.ok(commentService.createNewComment(commentPojo));
     }
 
-    @PutMapping("/editComment{cid}")
-    public ResponseEntity<String> deleteComment(@RequestBody CommentPojo commentPojo) {
-        return ResponseEntity.ok(commentService.createComment(commentPojo));
+    @PutMapping("/edit-Comment/")
+    public ResponseEntity<CommentPojo> editComments(@RequestBody CommentPojo commentPojo) {
+        return ResponseEntity.ok(commentService.editComment(commentPojo));
     }
 }

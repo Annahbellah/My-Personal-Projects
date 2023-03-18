@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface PostService {
-   ResponseEntity<PostPojo> createPost(PostPojo postPojo);
+   PostPojo createPost(PostPojo postPojo);
 
    ResponseEntity<PostPojo> fetchSinglePost(String postTitle);
 

@@ -21,5 +21,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             );
             return new ResponseEntity<>(apiException, badRequest);
         }
+
+
+    @ExceptionHandler(value = {UserNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFound(UserNotFoundException e){
+        //create payload containing exception details
+        //return response entity
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        CustomException apiException = new CustomException(
+                e.getMessage(),
+                badRequest,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
     }
 

@@ -12,8 +12,8 @@ import lombok.Setter;
 
 public class PostPojo {
 
+    private Long userId;
     private String postTitle;
-
-
     private String body;
 }
+

@@ -1,5 +1,7 @@
 package com.example.fashionblogapi.services.serviceImpl;
 
+import com.example.fashionblogapi.enums.Roles;
+import com.example.fashionblogapi.exceptions.UserNotFoundException;
 import com.example.fashionblogapi.pojos.PostPojo;
 import com.example.fashionblogapi.entities.Like;
 import com.example.fashionblogapi.entities.Post;
@@ -7,8 +9,8 @@ import com.example.fashionblogapi.entities.User;
 import com.example.fashionblogapi.exceptions.CustomRequestException;
 import com.example.fashionblogapi.repositories.LikeRepository;
 import com.example.fashionblogapi.repositories.PostRepository;
+import com.example.fashionblogapi.repositories.UserRepository;
 import com.example.fashionblogapi.services.PostService;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -25,33 +27,8 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-    private final HttpSession session;
+    private final UserRepository userRepository;
 
-//    @Autowired
-//    public PostServiceImpl(PostRepository postRepository, LikeRepository likeRepository, org.modelmapper.ModelMapper modelMapper, HttpSession session) {
-//        this.postRepository = postRepository;
-//        this.likeRepository = likeRepository;
-//        this.modelMapper = new org.modelmapper.ModelMapper();
-//        this.session = session;
-//    }
-
-//    @Override
-//    public Post fetchSinglePost(String postTitle) {
-//        Post singlePost = postRepository.findByPostTitle(postTitle);
-//        //post.setLikeCount(postLikes);
-//        return Post;
-//
-//        // User byUserName = userRepository.findByUserName(registrationDto.getUserName());
-//    }
-
-//    public Post fetchSinglePost(Long postId) {
-//        Long postLikes = likeRepository.findLikesByPostId(postId);
-//        Post post = postRepository.getById(postId);
-//        //post.setLikeCount(postLikes);
-//        return post;
-//
-//        // User byUserName = userRepository.findByUserName(registrationDto.getUserName());
-//    }
 
 
     @Override
@@ -70,26 +47,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PostPojo> createPost(PostPojo postPojo) {
-        User user = (User) session.getAttribute("user");
-        if (user.getRoles().equalsIgnoreCase("admin")) {
+    public PostPojo createPost(PostPojo postPojo) {
+        User user = userRepository.findById(postPojo.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("user is invalid"));
+        if (user.getRoles().equals(Roles.ADMIN.name())) {
 
-            Post byTitle = postRepository.findByPostTitle(postPojo.getPostTitle());
+            Post newPost = new Post();
+            newPost.setPostTitle(postPojo.getPostTitle());
+            newPost.setBody(postPojo.getBody());
+            newPost.setPostCreator(user);
+            Post savePost = postRepository.save(newPost);
+            PostPojo postPojo1 = new PostPojo();
+            BeanUtils.copyProperties(savePost, postPojo1);
+            return postPojo1;
 
-            if (byTitle == null) {
-                Post newPost = new Post();
-                newPost.setPostTitle(postPojo.getPostTitle());
-                newPost.setBody(postPojo.getBody());
-                newPost.setDateCreated(Date.from(Instant.now()));
-                newPost.setPostCreator(user);
-
-                Post savePost = postRepository.save(newPost);
-                PostPojo postPojo1 = new PostPojo();
-                BeanUtils.copyProperties(savePost, postPojo1);
-                return new ResponseEntity<>(postPojo1, HttpStatus.CREATED);
-            }
-
-            throw new CustomRequestException("This post already exists.");
         }
         else throw new CustomRequestException("Only admins can create a post!");
 

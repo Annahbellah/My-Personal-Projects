@@ -4,8 +4,6 @@ package com.example.fashionblogapi.exceptions;
         public CustomRequestException(String message) {
             super(message);
         }
-        public CustomRequestException(String message, Throwable cause) {
-            super(message, cause);
-        }
+
     }
 

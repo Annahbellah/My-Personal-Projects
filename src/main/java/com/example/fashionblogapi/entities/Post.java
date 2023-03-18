@@ -3,6 +3,9 @@ package com.example.fashionblogapi.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,19 +20,23 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false)
+    private Long postId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String postTitle;
+
     private String body;
-    private Date dateCreated;
-    private long likeCounts = 0;
-    private long commentCounts = 0;
+
+    @CreationTimestamp
+    private LocalDateTime dateCreated;
+
     @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     @JsonIgnore
     private User postCreator;
 
-    @OneToMany
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comment;
 
 

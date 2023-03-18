@@ -1,6 +1,6 @@
 package com.example.fashionblogapi.pojos;
 
-import jakarta.persistence.Column;
+import com.example.fashionblogapi.enums.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +15,11 @@ public class RegistrationPojo {
     private String firstName;
     private String lastName;
     private String email;
-    @Column(unique = true,nullable = false)
+
     private String userName;
-    @Column(unique = true,nullable = false)
+
+    private Roles role;
+
     private String password;
 
 
