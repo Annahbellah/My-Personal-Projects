@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService {
     public PostPojo createPost(PostPojo postPojo) {
         User user = userRepository.findById(postPojo.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("user is invalid"));
-        if (user.getRoles().equals(Roles.ADMIN.name())) {
+        if (user.getRole().equals(Roles.ADMIN)) {
 
             Post newPost = new Post();
             newPost.setPostTitle(postPojo.getPostTitle());

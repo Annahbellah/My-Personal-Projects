@@ -1,5 +1,6 @@
 package com.example.fashionblogapi.services.serviceImpl;
 
+import com.example.fashionblogapi.enums.Roles;
 import com.example.fashionblogapi.exceptions.CustomException;
 import com.example.fashionblogapi.exceptions.CustomRequestException;
 import com.example.fashionblogapi.exceptions.UserNotFoundException;
@@ -10,6 +11,7 @@ import com.example.fashionblogapi.repositories.UserRepository;
 import com.example.fashionblogapi.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
                 .email(registrationPojo.getEmail())
                 .firstName(registrationPojo.getFirstName())
                 .lastName(registrationPojo.getLastName())
-                .roles(registrationPojo.getRole().name())
+                .role(Roles.USER)
                 .build();
 
         userRepository.save(user);
